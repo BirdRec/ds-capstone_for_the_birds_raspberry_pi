@@ -228,6 +228,10 @@ while True:
                     local_path1 = t.path
                     local_file1 = "{timestamp}.jpg".format(timestamp=ts)
                     dropbox_file_path1 = "/{base_path}/{timestamp}.jpg".format(base_path="Apps/BirdRec", timestamp=ts)
+                    #debug
+                    x = open(t.path,"rb").read()
+                    print(x)
+                    #debug ende
                     dropbox_upload_file(local_path1, local_file1, dropbox_file_path1)
                     print("[UPLOADING...] {}".format(ts))
                     t.cleanup()
