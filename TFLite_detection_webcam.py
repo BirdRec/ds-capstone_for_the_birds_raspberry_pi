@@ -57,7 +57,7 @@ c = 0
 lastUploaded = datetime.datetime.now()
 min_upload_seconds = 3
 # jenser
-dropbox_access_token = "vkmcmnL-T_AAAAAAAAAD5DZdw5Q0PI5pAJwUjUnCqDLgA2chIw6a0RBHFqwm0dB4" # Dropbox BirdSurveillance
+dropbox_access_token = "JHGxMRNp26AAAAAAAAAHiqoGzEadsNpzCE7LH7y0wM0" # Dropbox BirdSurveillance
 # freder noch mit typo
 #dropbox_access_token = "sl.BSA6jEM-putwfpDRrmjBqeCLGs1jN5bXnZgArPL80rxLGRHqstMQxJTSaOSej9dGO_v2ELLu3LGA2c4W3deLCtDjC8udzCp7D8IGMIFCmohJQtLSu9"
 use_dropbox = True
