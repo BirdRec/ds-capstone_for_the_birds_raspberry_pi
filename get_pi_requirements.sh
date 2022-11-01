@@ -16,6 +16,12 @@ pip3 install opencv-python==3.4.6.27
 
 #pip3 install tensorflow
 
+# add imutils to do stuff with videos https://pypi.org/project/imutils/
+pip3 install imutils
+
+# Add loading option to dropbox
+pip3 install dropbox
+
 version=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 
 if [ $version == "3.7" ]; then
