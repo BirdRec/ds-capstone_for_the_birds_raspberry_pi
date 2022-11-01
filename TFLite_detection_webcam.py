@@ -56,10 +56,11 @@ use_TPU = args.edgetpu
 c = 0
 lastUploaded = datetime.datetime.now()
 min_upload_seconds = 3
-# jenser
+
+# Setup Dropbox 
+# Add Dropbox token
 dropbox_access_token = "JHGxMRNp26AAAAAAAAAHiqoGzEadsNpzCE7LH7y0wM0" # Dropbox BirdSurveillance
-# freder noch mit typo
-#dropbox_access_token = "sl.BSA6jEM-putwfpDRrmjBqeCLGs1jN5bXnZgArPL80rxLGRHqstMQxJTSaOSej9dGO_v2ELLu3LGA2c4W3deLCtDjC8udzCp7D8IGMIFCmohJQtLSu9"
+
 use_dropbox = True
 
 # Check if dropbox us is enabled
@@ -205,13 +206,13 @@ while True:
                     
                     # Upload temporary file to dropbox and cleanup temporary file
                     dropbox_path = "/{base_path}/{timestamp}.jpg".format(
-                        base_path="Apps/BirdSurveillance", timestamp=ts)
+                        base_path="Apps/BirdRec", timestamp=ts)
                     client.files_upload(open(t.path,"rb").read(),dropbox_path)
                     print("[UPLOADING...] {}".format(ts))
                     t.cleanup()
                     
                     # Trigger IFTTT notification
-                    requests.post('https://maker.ifttt.com/trigger/bird_surveillance/with/key/c2nrke4lrR-FSkYsBS2EWX')
+                    #requests.post('https://maker.ifttt.com/trigger/bird_surveillance/with/key/c2nrke4lrR-FSkYsBS2EWX')
             
                     # Set last Upload to current time
                     lastUploaded=timestamp
