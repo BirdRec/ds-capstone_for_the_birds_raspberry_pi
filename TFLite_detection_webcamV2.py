@@ -73,7 +73,7 @@ def dropbox_connect():#Create a connection to Dropbox.
     return dbx
 
 # Define uploader 
-def dropbox_upload_file(local_path, local_file, dropbox_file_path):
+def dropbox_upload_file(temp, dropbox_file_path):
     # Upload a file from the local machine to a path in the Dropbox app directory.
     # Args: local_path (str): The path to the local file.
     # local_file (str): The name of the local file.
@@ -82,10 +82,8 @@ def dropbox_upload_file(local_path, local_file, dropbox_file_path):
     # Returns: meta: The Dropbox file metadata.
     try:
         dbx = dropbox_connect()
-        local_file_path = pathlib.Path(local_path) / local_file
-        with local_file_path.open("rb") as f:
-            meta = dbx.files_upload(f.read(), dropbox_file_path, mode=dropbox.files.WriteMode("overwrite"))
-            return meta
+        meta = dbx.files_upload(open(temp,"rb").read(),dropbox_file_path, mode=dropbox.files.WriteMode("overwrite"))
+        return meta
     except Exception as e:
         print('Error uploading file to Dropbox: ' + str(e))
 
@@ -197,7 +195,7 @@ while True:
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
             
             # Set timestamtp format for saving
-            ts = timestamp.strftime("%m/%d/%Y_%H:%M:%S")
+            ts = timestamp.strftime("%A-%d-%B-%Y_%I:%M:%S%p")
 
             # Get bounding box coordinates and draw box
             # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
@@ -223,12 +221,14 @@ while True:
                     # Create temporary snapshot
                     t = TempImage()
                     cv2.imwrite(t.path, frame)
-                    
+                    # connect with db
+                    # dbx = dropbox_connect()
                     # Upload temporary file to dropbox and cleanup temporary file
-                    local_path1 = t.path
-                    local_file1 = "{timestamp}.jpg".format(timestamp=ts)
+                    # local_path1 = t.path
+                    # local_file1 = "{timestamp}.jpg".format(timestamp=ts)
                     dropbox_file_path1 = "/{base_path}/{timestamp}.jpg".format(base_path="Apps/BirdRec", timestamp=ts)
-                    dropbox_upload_file(local_path1, local_file1, dropbox_file_path1)
+                    #dbx.files_upload(open(t.path,"rb").read(),dropbox_file_path1)
+                    dropbox_upload_file(t.path, dropbox_file_path1)
                     print("[UPLOADING...] {}".format(ts))
                     t.cleanup()
                 
