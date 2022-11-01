@@ -31,6 +31,9 @@ import pathlib
 import dropbox
 from dropbox.exceptions import AuthError
 
+# add dropbox access token after cloning to raspberry
+dropbox_access_token = "" 
+
 # Define and parse input arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--modeldir', help='Folder the .tflite file is located in',
@@ -59,9 +62,6 @@ use_TPU = args.edgetpu
 c = 0
 lastUploaded = datetime.datetime.now()
 min_upload_seconds = 3
-
-# add dropbox access token after cloning to raspberry
-dropbox_access_token = "" 
 
 # Set up dropbox functions: 
 # Establish connection: 
@@ -225,9 +225,10 @@ while True:
                     cv2.imwrite(t.path, frame)
                     
                     # Upload temporary file to dropbox and cleanup temporary file
-                    local_path = t.path
-                    local_file = "{timestamp}.jpg".format(timestamp=ts)
-                    dropbox_file_path = "/{base_path}/{timestamp}.jpg".format(base_path="Apps/BirdRec", timestamp=ts)
+                    local_path1 = t.path
+                    local_file1 = "{timestamp}.jpg".format(timestamp=ts)
+                    dropbox_file_path1 = "/{base_path}/{timestamp}.jpg".format(base_path="Apps/BirdRec", timestamp=ts)
+                    dropbox_upload_file(local_path1, local_file1, dropbox_file_path1)
                     print("[UPLOADING...] {}".format(ts))
                     t.cleanup()
                 
