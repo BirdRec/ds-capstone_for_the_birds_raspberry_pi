@@ -59,14 +59,19 @@ min_upload_seconds = 3
 
 # Setup Dropbox 
 # Add Dropbox token
-dropbox_access_token = "JHGxMRNp26AAAAAAAAAHiqoGzEadsNpzCE7LH7y0wM0" # Dropbox BirdSurveillance
+# dropbox_access_token = "" # Legacy implementation
+your_app_key = "APP_KEY"
+your_app_secret = "APP_SECRET"
+your_oauth2_refresh_token = "REFRESH_TOKEN"
 
 use_dropbox = True
 
 # Check if dropbox us is enabled
 if use_dropbox == True:
     # connect dropbox client
-    client = dropbox.Dropbox(dropbox_access_token)
+    client = dropbox.Dropbox(dropbox_access_tokapp_key = your_app_key,
+            app_secret = your_app_secret,
+            oauth2_refresh_token = your_oauth2_refresh_token)
     print("[SUCCESS] Dropbox accounted linked")
 
 # Import TensorFlow libraries

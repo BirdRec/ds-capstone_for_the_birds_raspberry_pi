@@ -28,15 +28,20 @@ If you don't have one: get it.
 - Select the right app
 
 ## Create token
-- Hit the generate token button. No clue how this token is valid, dropbox has not documentation on it. 
+
+Dropbox has retired long-lived tokens on September 30th, 2021. There is a guide that offers help. The guide is very long and tiresome. There are two options for tokens that will be used in this guide. 
+
+[More informaiton on the API changes in Dropbox API 2](https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens)
+
+### Fastest way for testing
+- Hit the generate token button (The token is valid for about 2-4 hrs) 
 - copy token 
 - open your directory where the stuff is 
 - open file 
 - replace existing token example 
 
-**Side note:** No, there is currently no option to generate a longer running one. There was change in functionality somewhen in 2021-09.
-[This guide](https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize) was checked and tested, but NONE of it worked. 
-Only thing that worked: hit the generate token button and live with it. 
+### Set up a refresh token
+THIS IS SHIT!
 
 ## Go to terminal 
 - initialise env 
