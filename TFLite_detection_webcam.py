@@ -69,7 +69,7 @@ use_dropbox = True
 # Check if dropbox us is enabled
 if use_dropbox == True:
     # connect dropbox client
-    client = dropbox.Dropbox(dropbox_access_tokapp_key = your_app_key,
+    client = dropbox.Dropbox(app_key = your_app_key,
             app_secret = your_app_secret,
             oauth2_refresh_token = your_oauth2_refresh_token)
     print("[SUCCESS] Dropbox accounted linked")
