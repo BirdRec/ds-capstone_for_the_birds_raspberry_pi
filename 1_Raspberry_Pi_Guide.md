@@ -153,6 +153,8 @@ It's time to see the TFLite object detection model in action! First, free up mem
 
 Run the real-time webcam detection script by issuing the following command from inside the /home/pi/tflite1 directory. (Before running the command, make sure the tflite1-env environment is active by checking that (tflite1-env) appears in front of the command prompt.) **The TFLite_detection_webcam.py script will work with either a Picamera or a USB webcam.**
 
+If you do not want to use the save-to-Dropbox option, than set in the **TFLite_detection_webcam** script the indicator for Dropbox to False. If you want to use it: continue first with [](2_Dropbox_Guide.md) before running the code snippet.
+
 ```
 python3 TFLite_detection_webcam.py --modeldir=Sample_TFLite_model
 ```
