@@ -1,7 +1,8 @@
 ######## Webcam Object Detection Using Tensorflow-trained Classifier #########
 #
 # Author: Evan Juras
-# Date: 10/27/19
+# Adapted: Friederike Thies, Egle Wahl, Raywant Kaur, Philipp Werden
+# Date: 10/27/19 -> 11/2022
 # Description: 
 # This program uses a TensorFlow Lite model to perform object detection on a live webcam
 # feed. It draws boxes and scores around the objects of interest in each frame from the
@@ -12,6 +13,8 @@
 # https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/examples/python/label_image.py
 #
 # I added my own method of drawing boxes and labels using OpenCV.
+# 
+# The adaptation will add a save to dropbox option and a bird species classification.
 
 # Import packages
 from classes.tempimage import TempImage
@@ -27,6 +30,26 @@ import datetime
 import dropbox
 import requests
 import importlib.util
+
+# Setup Dropbox 
+# If you want to use dropbox, set this item to True, otherwise False
+use_dropbox = True
+# when saving items to your dropbox, we recommend to use your zip code so that geo information is available
+your_base_path = "Apps/22589"
+# Add Dropbox token
+# In the 2_Dropbox_Guide.md it is drescribed how to obtain the tokens, 
+# Follow the steps and use the creds here AFTER pulling this to your raspberrypi/webcam
+your_app_key = "APP_KEY"
+your_app_secret = "APP_SECRET"
+your_oauth2_refresh_token = "REFRESH_TOKEN"
+# Establish a connection:
+# Check if dropbox us is enabled
+if use_dropbox == True:
+    # connect dropbox client
+    client = dropbox.Dropbox(app_key = your_app_key,
+            app_secret = your_app_secret,
+            oauth2_refresh_token = your_oauth2_refresh_token)
+    print("[SUCCESS] Dropbox accounted linked")
 
 # Define and parse input arguments
 parser = argparse.ArgumentParser()
@@ -56,23 +79,6 @@ use_TPU = args.edgetpu
 c = 0
 lastUploaded = datetime.datetime.now()
 min_upload_seconds = 3
-
-# Setup Dropbox 
-# Add Dropbox token
-# dropbox_access_token = "" # Legacy implementation
-your_app_key = "APP_KEY"
-your_app_secret = "APP_SECRET"
-your_oauth2_refresh_token = "REFRESH_TOKEN"
-
-use_dropbox = True
-
-# Check if dropbox us is enabled
-if use_dropbox == True:
-    # connect dropbox client
-    client = dropbox.Dropbox(app_key = your_app_key,
-            app_secret = your_app_secret,
-            oauth2_refresh_token = your_oauth2_refresh_token)
-    print("[SUCCESS] Dropbox accounted linked")
 
 # Import TensorFlow libraries
 # If tflite_runtime is installed, import interpreter from tflite_runtime, else import from regular tensorflow
@@ -182,7 +188,7 @@ while True:
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
             
             # Set timestamtp format for saving
-            ts = timestamp.strftime("%A-%d-%B-%Y_%I:%M:%S%p")
+            ts = timestamp.strftime("%d-%B-%Y_%I:%M:%S%p")
 
             # Get bounding box coordinates and draw box
             # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
@@ -211,7 +217,7 @@ while True:
                     
                     # Upload temporary file to dropbox and cleanup temporary file
                     dropbox_path = "/{base_path}/{timestamp}.jpg".format(
-                        base_path="Apps/BirdRec", timestamp=ts)
+                        base_path=your_base_path, timestamp=ts)
                     client.files_upload(open(t.path,"rb").read(),dropbox_path)
                     print("[UPLOADING...] {}".format(ts))
                     t.cleanup()
