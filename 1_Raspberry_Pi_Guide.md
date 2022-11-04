@@ -47,9 +47,7 @@ Depending on how long it’s been since you’ve updated your Pi, the update cou
 
 While we're at it, let's make sure the camera interface is enabled in the Raspberry Pi Configuration menu. Click the Pi icon in the top left corner of the screen, select Preferences -> Raspberry Pi Configuration, and go to the Interfaces tab and verify Camera is set to Enabled. If it isn't, enable it now, and reboot the Raspberry Pi.
 
-<p align="center">
-  <img src="/doc/camera_enabled.png">
-</p>
+![](doc/camera_enabled.png)
 
 ### Step 1b. Download this repository and create virtual environment
 
@@ -92,9 +90,7 @@ source tflite1-env/bin/activate
 
 At this point, here's what your tflite1 directory should look like if you issue `ls`.
 
-<p align="center">
-  <img src="/doc/tflite1_folder.png">
-</p>
+![](doc/tflite1_folder.png)
 
 If your directory looks good, it's time to move on to Step 1c!
 
@@ -142,9 +138,7 @@ You can also use a custom object detection model by moving the model folder into
 
 You can simply copy that folder to a USB drive, insert the USB drive in your Raspberry Pi, and move the folder into the /home/pi/tflite1 directory. (Or you can email it to yourself, or put it on Google Drive, or do whatever your preferred method of file transfer is.) Here's an example of what my "BirdSquirrelRaccoon_TFLite_model" folder looks like in my /home/pi/tflite1 directory: 
 
-<p align="center">
-  <img src="/doc/BSR_directory1.png">
-</p>
+![](doc/BSR_directory1.png)
 
 Now your custom model is ready to go!
 
@@ -308,3 +302,4 @@ pip3 install https://dl.google.com/coral/python/tflite_runtime-2.1.0.post1-cp37-
 Then, re-run the TFLite detection script. It should work now!
 
 *Note: the URLs provided in these commands may change as newer versions of tflite_runtime are released. Check the [TFLite Python Quickstart page](https://www.tensorflow.org/lite/guide/python) for download URLs to the latest version of tflite_runtime.*
+
