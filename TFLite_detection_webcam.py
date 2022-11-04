@@ -34,8 +34,9 @@ import importlib.util
 # Setup Dropbox 
 # If you want to use dropbox, set this item to True, otherwise False
 use_dropbox = True
-# when saving items to your dropbox, we recommend to use your zip code so that geo information is available
-your_base_path = "Apps/22589"
+# Adding the name of folder will directly add this to your main folder
+# Recommendation: use your zip code so that geo information is available
+your_base_path = "22589"
 # Add Dropbox token
 # In the 2_Dropbox_Guide.md it is drescribed how to obtain the tokens, 
 # Follow the steps and use the creds here AFTER pulling this to your raspberrypi/webcam
@@ -216,8 +217,8 @@ while True:
                     cv2.imwrite(t.path, frame)
                     
                     # Upload temporary file to dropbox and cleanup temporary file
-                    dropbox_path = "/{base_path}/{timestamp}.jpg".format(
-                        base_path=your_base_path, timestamp=ts)
+                    dropbox_path = "/{base_path}/{timestamp}-{object_name}.jpg".format(
+                        base_path=your_base_path, timestamp=ts,object_name=object_name)
                     client.files_upload(open(t.path,"rb").read(),dropbox_path)
                     print("[UPLOADING...] {}".format(ts))
                     t.cleanup()
