@@ -162,15 +162,12 @@ while True:
     timestamp = datetime.datetime.now()
 
     # Grab frame from video stream
-    # frame1 = videostream.read()
-    while True:
-        frame1 = videostream.read()
-        if frame1 is None:
-            break
-        frame = frame1.copy()
+    frame1 = videostream.read()
+    if frame1 is None:
+        break
     
     # Acquire frame and resize to expected shape [1xHxWx3]
-    # frame = frame1.copy()
+    frame = frame1.copy()
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame_resized = cv2.resize(frame_rgb, (width, height))
     input_data = np.expand_dims(frame_resized, axis=0)
