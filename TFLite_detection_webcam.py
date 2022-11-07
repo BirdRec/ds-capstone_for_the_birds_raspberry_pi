@@ -191,7 +191,7 @@ while True:
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
             
             # Set timestamtp format for saving
-            ts = timestamp.strftime("%d-%B-%Y_%I:%M:%S%p")
+            ts = timestamp.strftime("%Y-%m-%d_%X")
 
             # Get bounding box coordinates and draw box
             # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
