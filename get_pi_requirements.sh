@@ -1,14 +1,21 @@
 #!/bin/bash
 
 # Get packages required for OpenCV
-
 sudo apt-get -y install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
 sudo apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 sudo apt-get -y install libxvidcore-dev libx264-dev
 sudo apt-get -y install qt4-dev-tools libatlas-base-dev
+# install new dependencies for picamera (FT - 2022-11)
+sudo apt install -y python3-picamera2
 
 # Need this in order to make model running again (FT - 2022-11)
 sudo apt-get install libatlas-base-dev
+
+# add imutils to do stuff with videos https://pypi.org/project/imutils/ (FT - 2022-11)
+pip3 install imutils
+
+# Add loading option to dropbox (FT - 2022-11)
+pip3 install dropbox
 
 # Need to get an older version of OpenCV because version 4 has errors
 pip3 install opencv-python==3.4.11.41
@@ -18,12 +25,6 @@ pip3 install opencv-python==3.4.11.41
 # Will change to just 'pip3 install tensorflow' once newer versions of TF are added to piwheels
 
 #pip3 install tensorflow
-
-# add imutils to do stuff with videos https://pypi.org/project/imutils/
-pip3 install imutils
-
-# Add loading option to dropbox (FT - 2022-11)
-pip3 install dropbox
 
 version=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 
