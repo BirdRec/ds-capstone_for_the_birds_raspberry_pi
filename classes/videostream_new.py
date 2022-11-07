@@ -6,6 +6,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
 import cv2
+import picamera
 
 class PiVideoStream:
     #Camera object that controls video streaming from the Picamera

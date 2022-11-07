@@ -151,13 +151,6 @@ input_mean = 127.5
 input_std = 127.5
 
 # Camera stuff
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-n", "--num-frames", type=int, default=100,
-	help="# of frames to loop over for FPS test")
-ap.add_argument("-d", "--display", type=int, default=-1,
-	help="Whether or not frames should be displayed")
-args = vars(ap.parse_args())
 
 # initialize the camera and stream
 camera = PiCamera()
