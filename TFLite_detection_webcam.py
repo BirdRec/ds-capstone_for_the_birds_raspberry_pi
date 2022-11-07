@@ -19,7 +19,7 @@
 # Import packages
 from classes.tempimage import TempImage
 from classes.videostream import VideoStream
-from imutils.video import FPS
+import imutils.video import FPS
 import os
 import argparse
 import cv2
@@ -30,6 +30,13 @@ import datetime
 import dropbox
 import requests
 import importlib.util
+# new packages for picamera
+from classes.videostream_new import PiVideoStream
+from __future__ import print_function
+import imutils
+from imutils.video.pivideostream import PiVideoStream
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 # Setup Dropbox 
 # If you want to use dropbox, set this item to True, otherwise False
@@ -142,18 +149,40 @@ floating_model = (input_details[0]['dtype'] == np.float32)
 input_mean = 127.5
 input_std = 127.5
 
-# Initialize frame rate calculation
-# frame_rate_calc = 1
-# freq = cv2.getTickFrequency()
+# Camera stuff
+# construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-n", "--num-frames", type=int, default=100,
+	help="# of frames to loop over for FPS test")
+ap.add_argument("-d", "--display", type=int, default=-1,
+	help="Whether or not frames should be displayed")
+args = vars(ap.parse_args())
+
+# initialize the camera and stream
+camera = PiCamera()
+camera.resolution = (320, 240)
+camera.framerate = 90
+rawCapture = PiRGBArray(camera, size=(imW, imH))
+stream = camera.capture_continuous(rawCapture, format="bgr",
+	use_video_port=True)
 
 # Initialize video stream
-print("[INFO] starting video stream...")
-videostream = VideoStream(resolution=(imW,imH),framerate=90).start()
-time.sleep(1)
+# print("[INFO] starting video stream...")
+# videostream = VideoStream(resolution=(imW,imH),framerate=90).start()
+# time.sleep(1)
+# fps = FPS().start()
+
+# created a *threaded *video stream, allow the camera sensor to warmup,
+# and start the FPS counter
+print("[INFO] sampling THREADED frames from `picamera` module...")
+videostream = PiVideoStream().start()
+time.sleep(2.0)
 fps = FPS().start()
 
-#for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
-while True:
+# old: for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
+# while True:
+# new: loop over some frames...this time using the threaded stream
+while fps._numFrames < args["num_frames"]:
 
     # Start timer (for calculating frame rate)
     # t1 = cv2.getTickCount()
@@ -162,9 +191,11 @@ while True:
     timestamp = datetime.datetime.now()
 
     # Grab frame from video stream
+    # frame1 = videostream.read()
     frame1 = videostream.read()
-    if frame1 is None:
+    if frame is None:
         break
+    frame1 = imutils.resize(frame, width=400)
     
     # Acquire frame and resize to expected shape [1xHxWx3]
     frame = frame1.copy()
@@ -219,7 +250,7 @@ while True:
                     cv2.imwrite(t.path, frame)
                     
                     # Upload temporary file to dropbox and cleanup temporary file
-                    dropbox_path = "/{base_path}/{timestamp}-{object_name}.jpg".format(
+                    dropbox_path = "/{base_path}/{timestamp}_{object_name}.jpg".format(
                         base_path=your_base_path, timestamp=ts,object_name=object_name)
                     client.files_upload(open(t.path,"rb").read(),dropbox_path)
                     print("[UPLOADING...] {}".format(ts))
@@ -240,11 +271,6 @@ while True:
     
     frame_display = cv2.resize(frame, (360, 240), interpolation=cv2.INTER_CUBIC)
     cv2.imshow('Object detector', frame_display)
-
-    # Calculate framerate
-    # t2 = cv2.getTickCount()
-    # time1 = (t2-t1)/freq
-    # frame_rate_calc= 1/time1
     
     # Update the FPS counter
     fps.update()
