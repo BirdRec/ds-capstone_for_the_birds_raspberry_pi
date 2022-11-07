@@ -16,10 +16,13 @@
 # 
 # The adaptation will add a save to dropbox option and a bird species classification.
 
+# new packages
+from __future__ import print_function
+from classes.videostream_new import PiVideoStream
 # Import packages
 from classes.tempimage import TempImage
 from classes.videostream import VideoStream
-import imutils.video import FPS
+from imutils.video import FPS
 import os
 import argparse
 import cv2
@@ -31,8 +34,6 @@ import dropbox
 import requests
 import importlib.util
 # new packages for picamera
-from classes.videostream_new import PiVideoStream
-from __future__ import print_function
 import imutils
 from imutils.video.pivideostream import PiVideoStream
 from picamera.array import PiRGBArray
