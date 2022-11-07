@@ -74,7 +74,6 @@ parser.add_argument('--resolution', help='Desired webcam resolution in WxH. If t
                     default='1280x720')
 parser.add_argument('--edgetpu', help='Use Coral Edge TPU Accelerator to speed up detection',
                     action='store_true')
-
 args = parser.parse_args()
 
 # Initialize parameters
@@ -159,15 +158,13 @@ input_std = 127.5
 
 # created a *threaded *video stream, allow the camera sensor to warmup,
 # and start the FPS counter
-print("[INFO] sampling THREADED frames from `picamera` module...")
-videostream = PiVideoStream().start()
+print("[INFO] starting video stream from picamera...")
+videostream = PiVideoStream(resolution=(imW,imH),framerate=90).start()
 time.sleep(2.0)
 fps = FPS().start()
 
 # old: for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
-# while True:
-# new: loop over some frames...this time using the threaded stream
-while fps._numFrames < args["num_frames"]:
+while True:
 
     # Start timer (for calculating frame rate)
     # t1 = cv2.getTickCount()
@@ -176,11 +173,10 @@ while fps._numFrames < args["num_frames"]:
     timestamp = datetime.datetime.now()
 
     # Grab frame from video stream
-    # frame1 = videostream.read()
     frame1 = videostream.read()
-    if frame is None:
+    if frame1 is None:
         break
-    frame1 = imutils.resize(frame, width=400)
+    frame1 = imutils.resize(frame1, width=1280)
     
     # Acquire frame and resize to expected shape [1xHxWx3]
     frame = frame1.copy()
@@ -200,7 +196,7 @@ while fps._numFrames < args["num_frames"]:
     boxes = interpreter.get_tensor(output_details[0]['index'])[0] # Bounding box coordinates of detected objects
     classes = interpreter.get_tensor(output_details[1]['index'])[0] # Class index of detected objects
     scores = interpreter.get_tensor(output_details[2]['index'])[0] # Confidence of detected objects
-    num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
+    # num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
 
     # Loop over all detections and draw detection box if confidence is above minimum threshold
     for i in range(len(scores)):
