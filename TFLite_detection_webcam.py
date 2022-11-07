@@ -151,15 +151,6 @@ input_mean = 127.5
 input_std = 127.5
 
 # Camera stuff
-
-# initialize the camera and stream
-camera = PiCamera()
-camera.resolution = (320, 240)
-camera.framerate = 90
-rawCapture = PiRGBArray(camera, size=(imW, imH))
-stream = camera.capture_continuous(rawCapture, format="bgr",
-	use_video_port=True)
-
 # Initialize video stream
 # print("[INFO] starting video stream...")
 # videostream = VideoStream(resolution=(imW,imH),framerate=90).start()
