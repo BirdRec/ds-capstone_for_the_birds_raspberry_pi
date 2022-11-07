@@ -59,7 +59,7 @@ parser.add_argument('--modeldir', help='Folder the .tflite file is located in',
 parser.add_argument('--graph', help='Name of the .tflite file, if different than detect.tflite',
                     default='coco_ssd_mobilenet_v1_1_0_quant_2018_06_29.tflite')
 parser.add_argument('--labels', help='Name of the labelmap file, if different than labelmap.txt',
-                    default='labelmap.txt')
+                    default='/models/object_detection/labelmap.txt')
 parser.add_argument('--threshold', help='Minimum confidence threshold for displaying detected objects',
                     default=0.5)
 # CL Model:
@@ -68,7 +68,7 @@ parser.add_argument('--modeldir_cl', help='Folder the .tflite file is located in
 parser.add_argument('--graph_cl', help='Name of the .tflite file, if different than detect.tflite',
                     default='MobileNetV2_Kaggle_p150_e10_dr-quant.tflite')
 parser.add_argument('--labels_cl', help='Name of the labelmap file, if different than labelmap.txt',
-                    default='labelmap.txt')
+                    default='/models/image_classification/labelmap.txt')
 # Set camera resolution and cpu type
 parser.add_argument('--resolution', help='Desired webcam resolution in WxH. If the webcam does not support the resolution entered, errors may occur.',
                     default='1280x720')
@@ -252,8 +252,8 @@ while True:
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
             
             # Set timestamp format for saving
-            ts = timestamp.strftime("%d-%B-%Y_%I:%M:%S%p")
-            # ts = timestamp.strftime('%Y-%m-%d_%X')  # 2020-03-14_15:32:52
+            # ts = timestamp.strftime("%d-%B-%Y_%I:%M:%S%p")
+            ts = timestamp.strftime('%Y-%m-%d_%X')  # 2020-03-14_15:32:52
 
             # Get bounding box coordinates and draw box
             # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
@@ -304,7 +304,7 @@ while True:
                         label_species.replace(' ','-')  # e.g. Coal tit -> Coal-tit
                         dropbox_path = f'/{your_base_path}/{ts}_{object_name}_{label_species}.jpg'
                     else:
-                        dropbox_path = f'/{your_base_path}/{ts}_{object_name}.jpg'
+                        dropbox_path = f'/{your_base_path}/{ts}_{object_name}_.jpg'
 
                     client.files_upload(open(t.path,"rb").read(),dropbox_path)
                     print("[UPLOADING...] {}".format(ts))
