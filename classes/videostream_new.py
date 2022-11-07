@@ -4,6 +4,7 @@
 # import the necessary packages
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from pivideostream import PiVideoStream
 from threading import Thread
 import cv2
 import picamera
@@ -12,12 +13,14 @@ class PiVideoStream:
     #Camera object that controls video streaming from the Picamera
 	def __init__(self, resolution=(640,480),framerate=90):
 		# initialize the camera and stream
-		self.camera = PiCamera()
-		self.camera.resolution = resolution
-		self.camera.framerate = framerate
+		#self.camera = PiCamera()
+		#self.camera.resolution = resolution
+		#self.camera.framerate = framerate
+		self.stream = PiVideoStream(resolution=resolution,
+				framerate=framerate)
 		self.rawCapture = PiRGBArray(self.camera, size=resolution)
-		self.stream = self.camera.capture_continuous(self.rawCapture,
-			format="bgr", use_video_port=True)
+		#self.stream = self.camera.capture_continuous(self.rawCapture,
+		#	format="bgr", use_video_port=True)
 		# initialize the frame and the variable used to indicate
 		# if the thread should be stopped
 		self.frame = None
