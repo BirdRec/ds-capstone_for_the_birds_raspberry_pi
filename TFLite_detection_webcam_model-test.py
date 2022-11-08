@@ -116,7 +116,7 @@ if use_TPU:
 
 # Get path to current working directory
 CWD_PATH = os.getcwd()
-
+print(CWD_PATH)
 # Set paths to object detection files
 # Path to .tflite file, which contains the model that is used for object detection (od)
 PATH_TO_CKPT = os.path.join(CWD_PATH,MODEL_NAME,GRAPH_NAME)
