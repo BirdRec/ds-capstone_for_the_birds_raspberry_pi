@@ -159,7 +159,7 @@ input_std = 127.5
 # created a *threaded *video stream, allow the camera sensor to warmup,
 # and start the FPS counter
 print("[INFO] starting video stream from picamera...")
-videostream = PiVideoStream(resolution=(imW,imH),framerate=90).start()
+videostream = PiVideoStream(resolution=(imW,imH),framerate=32).start()
 time.sleep(2.0)
 fps = FPS().start()
 
@@ -245,11 +245,7 @@ while True:
             else:
                 None
 
-    # Draw framerate in corner of frame
-    # cv2.putText(frame,'FPS: {0:.2f}'.format(fps.fps(),(30,50),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,0),2,cv2.LINE_AA))
-
     # All the results have been drawn on the frame, so it's time to display it.
-    
     frame_display = cv2.resize(frame, (360, 240), interpolation=cv2.INTER_CUBIC)
     cv2.imshow('Object detector', frame_display)
     
