@@ -149,25 +149,32 @@ floating_model = (input_details[0]['dtype'] == np.float32)
 input_mean = 127.5
 input_std = 127.5
 
-# Camera stuff
-# Initialize video stream
-# print("[INFO] starting video stream...")
-# videostream = VideoStream(resolution=(imW,imH),framerate=90).start()
-# time.sleep(1)
-# fps = FPS().start()
+# Check output layer name to determine if this model was created with TF2 or TF1,
+# because outputs are ordered differently for TF2 and TF1 models
+outname = output_details[0]['name']
 
+if ('StatefulPartitionedCall' in outname): # This is a TF2 model
+    boxes_idx, classes_idx, scores_idx = 1, 3, 0
+else: # This is a TF1 model
+    boxes_idx, classes_idx, scores_idx = 0, 1, 2
+
+# Initialize frame rate calculation
+frame_rate_calc = 1
+freq = cv2.getTickFrequency()
+
+# Camera stuff
 # created a *threaded *video stream, allow the camera sensor to warmup,
 # and start the FPS counter
 print("[INFO] starting video stream from picamera...")
 videostream = PiVideoStream(resolution=(imW,imH),framerate=32).start()
-time.sleep(2.0)
+time.sleep(1)
 fps = FPS().start()
 
 # old: for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
 while True:
 
     # Start timer (for calculating frame rate)
-    # t1 = cv2.getTickCount()
+    t1 = cv2.getTickCount()
     
     # Set the current timestamp
     timestamp = datetime.datetime.now()
@@ -196,7 +203,6 @@ while True:
     boxes = interpreter.get_tensor(output_details[0]['index'])[0] # Bounding box coordinates of detected objects
     classes = interpreter.get_tensor(output_details[1]['index'])[0] # Class index of detected objects
     scores = interpreter.get_tensor(output_details[2]['index'])[0] # Confidence of detected objects
-    # num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
 
     # Loop over all detections and draw detection box if confidence is above minimum threshold
     for i in range(len(scores)):
@@ -244,11 +250,18 @@ while True:
                     lastUploaded=timestamp
             else:
                 None
+    # Draw framerate in corner of frame
+    cv2.putText(frame,'FPS: {0:.2f}'.format(frame_rate_calc),(30,50),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,0),2,cv2.LINE_AA)
 
     # All the results have been drawn on the frame, so it's time to display it.
     frame_display = cv2.resize(frame, (360, 240), interpolation=cv2.INTER_CUBIC)
     cv2.imshow('Object detector', frame_display)
     
+    # Calculate framerate
+    t2 = cv2.getTickCount()
+    time1 = (t2-t1)/freq
+    frame_rate_calc= 1/time1
+
     # Update the FPS counter
     fps.update()
 

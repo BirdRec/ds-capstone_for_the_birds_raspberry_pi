@@ -4,10 +4,8 @@
 sudo apt-get -y install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
 sudo apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 sudo apt-get -y install libxvidcore-dev libx264-dev
-sudo apt-get -y install qt4-dev-tools libatlas-base-dev
-
-# Need this in order to make model running again (FT - 2022-11)
-sudo apt-get install libatlas-base-dev
+sudo apt-get -y install qt4-dev-tools 
+sudo apt-get -y install libatlas-base-dev
 
 # install new dependencies for picamera (FT - 2022-11)
 pip3 install picamera
