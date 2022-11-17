@@ -39,6 +39,9 @@ from imutils.video.pivideostream import PiVideoStream
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 
+# setup switch for sample model to custom model
+use_custom_model = False
+
 # Setup Dropbox 
 # If you want to use dropbox, set this item to True, otherwise False
 use_dropbox = True
@@ -199,22 +202,17 @@ while True:
     interpreter.set_tensor(input_details[0]['index'],input_data)
     interpreter.invoke()
 
-    def get_output_tensor(interpreter, index):
-    #Returns the output tensor at the given index.
-        output_details = interpreter.get_output_details()[index]
-        tensor = np.squeeze(interpreter.get_tensor(output_details['index']))
-        return tensor
-
     # Retrieve detection results
-    # Coco model: use these allocations
-    #boxes = interpreter.get_tensor(output_details[0]['index'])[0] # Bounding box coordinates of detected objects
-    #classes = interpreter.get_tensor(output_details[1]['index'])[0] # Class index of detected objects
-    #scores = interpreter.get_tensor(output_details[2]['index'])[0] # Confidence of detected objects
-    # Custom model: use these allocations to get all output details
-    boxes = get_output_tensor(interpreter, 0)
-    classes = get_output_tensor(interpreter, 1)
-    scores = get_output_tensor(interpreter, 2)
-    count = int(get_output_tensor(interpreter, 3))
+    # Coco model is the sample model these allocations work for it
+    if use_custom_model == False:
+        boxes = interpreter.get_tensor(output_details[0]['index'])[0] # Bounding box coordinates of detected objects
+        classes = interpreter.get_tensor(output_details[1]['index'])[0] # Class index of detected objects
+        scores = interpreter.get_tensor(output_details[2]['index'])[0] # Confidence of detected objects
+    # Custom model: use these allocations to get all output details - change from tf1 to tf2
+    else: 
+        boxes = interpreter.get_tensor(output_details[1]['index'])[0] 
+        classes = interpreter.get_tensor(output_details[3]['index'])[0]     
+        scores = interpreter.get_tensor(output_details[0]['index'])[0] 
 
     # Loop over all detections and draw detection box if confidence is above minimum threshold
     for i in range(len(scores)):
@@ -243,7 +241,7 @@ while True:
             # See if enough time between uploads has passed
             if (timestamp - lastUploaded).seconds >= min_upload_seconds:
                 # If label is "person" then upload
-                if object_name in("bird","cat"):
+                if object_name in("bird","cat","Bird", "Cat", "Squirrel", "Raccoon"):
                     # Create temporary snapshot
                     t = TempImage()
                     cv2.imwrite(t.path, frame)
@@ -252,7 +250,7 @@ while True:
                     dropbox_path = "/{base_path}/{timestamp}_{object_name}.jpg".format(
                         base_path=your_base_path, timestamp=ts,object_name=object_name)
                     client.files_upload(open(t.path,"rb").read(),dropbox_path)
-                    print("[UPLOADING...] {}".format(ts))
+                    print("[UPLOADING to dropbox...] {}".format(ts))
                     t.cleanup()
                     
                     # Trigger IFTTT notification
